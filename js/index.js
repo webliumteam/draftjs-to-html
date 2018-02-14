@@ -17,7 +17,7 @@ export default function draftToHtml(
     const { blocks, entityMap } = editorContent;
     if (blocks && blocks.length > 0) {
       let listBlocks = [];
-      blocks.forEach((block) => {
+      blocks.forEach((block, index) => {
         if (isList(block.type)) {
           listBlocks.push(block);
         } else {
@@ -32,6 +32,7 @@ export default function draftToHtml(
             hashtagConfig,
             directional,
             customEntityTransform,
+            blocks[index + 1],
           );
           html.push(blockHtml);
         }

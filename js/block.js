@@ -506,7 +506,8 @@ export function getBlockMarkup(
   entityMap: Object,
   hashtagConfig: Object,
   directional: boolean,
-  customEntityTransform: Function
+  customEntityTransform: Function,
+  nextBlock: Object,
 ): string {
   const blockHtml = [];
   if (isAtomicEntityBlock(block)) {
@@ -520,17 +521,20 @@ export function getBlockMarkup(
   } else {
     const blockTag = getBlockTag(block.type);
     if (blockTag) {
-      blockHtml.push(`<${blockTag}`);
       const blockStyle = getBlockStyle(block.data);
-      if (blockStyle) {
-        blockHtml.push(` style="${blockStyle}"`);
+      const tagIsrequired = nextBlock || blockStyle || directional;
+      if (tagIsrequired) {
+        blockHtml.push(`<${blockTag}`);
+        if (blockStyle) {
+          blockHtml.push(` style="${blockStyle}"`);
+        }
+        if (directional) {
+          blockHtml.push(' dir = "auto"');
+        }
+        blockHtml.push('>');
       }
-      if (directional) {
-        blockHtml.push(' dir = "auto"');
-      }
-      blockHtml.push('>');
       blockHtml.push(getBlockInnerMarkup(block, entityMap, hashtagConfig, customEntityTransform));
-      blockHtml.push(`</${blockTag}>`);
+      tagIsrequired && blockHtml.push(`</${blockTag}>`);
     }
   }
   blockHtml.push('\n');
