@@ -4,7 +4,7 @@ import { forEach, isEmptyString } from './common';
 * Mapping block-type to corresponding html tag.
 */
 const blockTypesMapping: Object = {
-  unstyled: 'p',
+  unstyled: 'span',
   'header-one': 'h1',
   'header-two': 'h2',
   'header-three': 'h3',
@@ -15,6 +15,10 @@ const blockTypesMapping: Object = {
   'ordered-list-item': 'ol',
   blockquote: 'blockquote',
   code: 'pre',
+};
+
+const defaultStylesMap: Object = {
+  unstyled: 'display: block;',
 };
 
 /**
@@ -507,7 +511,7 @@ export function getBlockMarkup(
   hashtagConfig: Object,
   directional: boolean,
   customEntityTransform: Function,
-  nextBlock: Object,
+  blocksTotal: Number,
 ): string {
   const blockHtml = [];
   if (isAtomicEntityBlock(block)) {
@@ -521,12 +525,13 @@ export function getBlockMarkup(
   } else {
     const blockTag = getBlockTag(block.type);
     if (blockTag) {
+      const defaultStyle = defaultStylesMap[block.type] || '';
       const blockStyle = getBlockStyle(block.data);
-      const tagIsrequired = nextBlock || blockStyle || directional;
+      const tagIsrequired = blocksTotal > 1 || blockStyle || directional;
       if (tagIsrequired) {
         blockHtml.push(`<${blockTag}`);
         if (blockStyle) {
-          blockHtml.push(` style="${blockStyle}"`);
+          blockHtml.push(` style="${defaultStyle}${blockStyle}"`);
         }
         if (directional) {
           blockHtml.push(' dir = "auto"');

@@ -32,7 +32,7 @@ export default function draftToHtml(
             hashtagConfig,
             directional,
             customEntityTransform,
-            blocks[index + 1],
+            blocks.length,
           );
           html.push(blockHtml);
         }
