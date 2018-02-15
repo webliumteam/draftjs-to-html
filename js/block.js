@@ -17,6 +17,16 @@ const blockTypesMapping: Object = {
   code: 'pre',
 };
 
+const inlineStylesMap: Object = {
+  BOLD: '<span style="font-weight: bold;">{$}</span>',
+  ITALIC: '<em>{$}</em>',
+  UNDERLINE: '<u>{$}</u>',
+  STRIKETHROUGH: '<del>{$}</del>',
+  CODE: '<code>{$}</code>',
+  SUPERSCRIPT: '<sup>{$}</sup>',
+  SUBSCRIPT: '<sub>{$}</sub>',
+};
+
 const defaultStylesMap: Object = {
   unstyled: 'display: block;',
 };
@@ -247,22 +257,7 @@ export function sameStyleAsPrevious(
 * Function returns html for text depending on inline style tags applicable to it.
 */
 export function addInlineStyleMarkup(style: string, content: string): string {
-  if (style === 'BOLD') {
-    return `<strong>${content}</strong>`;
-  } else if (style === 'ITALIC') {
-    return `<em>${content}</em>`;
-  } else if (style === 'UNDERLINE') {
-    return `<ins>${content}</ins>`;
-  } else if (style === 'STRIKETHROUGH') {
-    return `<del>${content}</del>`;
-  } else if (style === 'CODE') {
-    return `<code>${content}</code>`;
-  } else if (style === 'SUPERSCRIPT') {
-    return `<sup>${content}</sup>`;
-  } else if (style === 'SUBSCRIPT') {
-    return `<sub>${content}</sub>`;
-  }
-  return content;
+  return (inlineStylesMap[style] || '{$}').replace(/\{\$\}/, content);
 }
 
 /**
