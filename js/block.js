@@ -530,7 +530,7 @@ export function getBlockMarkup(
       const tagIsrequired = blocksTotal > 1 || blockStyle || directional;
       if (tagIsrequired) {
         blockHtml.push(`<${blockTag}`);
-        if (blockStyle) {
+        if (blockStyle || defaultStyle) {
           blockHtml.push(` style="${defaultStyle}${blockStyle}"`);
         }
         if (directional) {
