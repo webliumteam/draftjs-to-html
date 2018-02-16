@@ -25,6 +25,9 @@ const inlineStylesMap: Object = {
   CODE: '<code>{$}</code>',
   SUPERSCRIPT: '<sup>{$}</sup>',
   SUBSCRIPT: '<sub>{$}</sub>',
+  UNBOLD: '<span style="font-weight: normal;">{$}</span>',
+  UNITALIC: '<span style="font-style: normal;">{$}</span>',
+  UNUNDERLINE: '<span style="text-decoration: none;">{$}</span>',
 };
 
 const defaultStylesMap: Object = {
