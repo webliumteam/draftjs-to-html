@@ -27,7 +27,6 @@ const inlineStylesMap: Object = {
   SUBSCRIPT: '<sub>{$}</sub>',
   UNBOLD: '<span style="font-weight: normal;">{$}</span>',
   UNITALIC: '<span style="font-style: normal;">{$}</span>',
-  UNUNDERLINE: '<span style="text-decoration: none;">{$}</span>',
 };
 
 const defaultStylesMap: Object = {
@@ -165,7 +164,6 @@ function getStyleArrayForBlock(block: Object): Object {
     UNDERLINE: new Array(text.length),
     UNBOLD: new Array(text.length),
     UNITALIC: new Array(text.length),
-    UNUNDERLINE: new Array(text.length),
     STRIKETHROUGH: new Array(text.length),
     CODE: new Array(text.length),
     SUPERSCRIPT: new Array(text.length),
@@ -214,9 +212,6 @@ export function getStylesAtOffset(inlineStyles: Object, offset: number): Object 
   }
   if (inlineStyles.FONTFAMILY[offset]) {
     styles.FONTFAMILY = inlineStyles.FONTFAMILY[offset];
-  }
-  if (inlineStyles.UNUNDERLINE[offset]) {
-    styles.UNUNDERLINE = true;
   }
   if (inlineStyles.UNITALIC[offset]) {
     styles.UNITALIC = true;
@@ -444,7 +439,7 @@ like color, background-color, font-size are applicable.
 */
 function getInlineStyleSectionMarkup(block: Object, styleSection: Object): string {
   const styleTagSections = getInlineStyleSections(
-    block, ['UNBOLD', 'UNITALIC', 'UNUNDERLINE', 'BOLD', 'ITALIC', 'UNDERLINE', 'STRIKETHROUGH', 'CODE', 'SUPERSCRIPT', 'SUBSCRIPT'], styleSection.start, styleSection.end,
+    block, ['UNBOLD', 'UNITALIC', 'BOLD', 'ITALIC', 'UNDERLINE', 'STRIKETHROUGH', 'CODE', 'SUPERSCRIPT', 'SUBSCRIPT'], styleSection.start, styleSection.end,
   );
   let styleSectionText = '';
   styleTagSections.forEach((stylePropertySection) => {
