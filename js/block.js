@@ -470,7 +470,12 @@ function getSectionMarkup(
   inlineStyleSections.forEach((styleSection) => {
     entityInlineMarkup.push(getInlineStyleSectionMarkup(block, styleSection));
   });
-  let sectionText = entityInlineMarkup.join('');
+  let sectionText = entityInlineMarkup
+    .map((item) => {
+      const match = item.match(/color:\svar\(--(.*)\)/);
+      return match ? item.replace('style=', `class="text-${match[1]}" style=`) : item;
+    })
+    .join('');
   if (section.type === 'ENTITY') {
     if (section.entityKey !== undefined && section.entityKey !== null) {
       sectionText = getEntityMarkup(entityMap, section.entityKey, sectionText, customEntityTransform);
