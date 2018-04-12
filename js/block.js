@@ -472,7 +472,7 @@ function getSectionMarkup(
   });
   let sectionText = entityInlineMarkup
     .map((item) => {
-      const match = item.match(/color:\svar\(--(.*)\)/);
+      const match = item.match(/color:\s?var\(--(.*?)\)/);
       return match ? item.replace('style=', `class="text-${match[1]}" style=`) : item;
     })
     .join('');
