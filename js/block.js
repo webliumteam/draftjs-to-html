@@ -339,7 +339,7 @@ function getEntityMarkup(
   }
   if (entity.type === 'LINK') {
     const targetOption = entity.data.targetOption || '_self';
-    return `<a href="${entity.data.url}" class="typography__link" target="${targetOption}">${text}</a>`;
+    return `<a href="${entity.data.url}" class="ui-link" target="${targetOption}">${text}</a>`;
   }
   if (entity.type === 'IMAGE') {
     return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="float:${entity.data.alignment || 'none'};height: ${entity.data.height};width: ${entity.data.width}"/>`;
