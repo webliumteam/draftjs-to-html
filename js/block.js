@@ -554,6 +554,5 @@ export function getBlockMarkup(
       tagIsrequired && blockHtml.push(`</${blockTag}>`);
     }
   }
-  blockHtml.push('\n');
   return blockHtml.join('');
 }
