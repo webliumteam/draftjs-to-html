@@ -532,8 +532,8 @@ export function getBlockMarkup(
         undefined,
         customEntityTransform,
       ));
-  } else if (block.type === 'unstyled' && !block.text) {
-    blockHtml.push('<br>');
+  // } else if (block.type === 'unstyled' && !block.text) {
+  //   blockHtml.push('<br>');
   } else {
     const blockTag = getBlockTag(block.type);
     if (blockTag) {
