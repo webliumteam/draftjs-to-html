@@ -532,7 +532,7 @@ export function getBlockMarkup(
         undefined,
         customEntityTransform,
       ));
-  } else if (block.type === 'unstyled' && !block.text) {
+  } else if (block.type === 'unstyled' && !block.text && blocksTotal > 1) {
     blockHtml.push('<br>');
   } else {
     const blockTag = getBlockTag(block.type);
