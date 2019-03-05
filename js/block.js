@@ -301,10 +301,10 @@ export function addStylePropertyMarkup(styles: Object, text: string): string {
   if (styles && (styles.COLOR || styles.BGCOLOR || styles.FONTSIZE || styles.FONTFAMILY)) {
     let styleString = 'style="';
     if (styles.COLOR) {
-      styleString += `color: ${styles.COLOR};`;
+      styleString += `color: ${styles.COLOR.replace(/ /g, '')};`;
     }
     if (styles.BGCOLOR) {
-      styleString += `background-color: ${styles.BGCOLOR};`;
+      styleString += `background-color: ${styles.BGCOLOR.replace(/ /g, '')};`;
     }
     if (styles.FONTSIZE) {
       styleString += `font-size: ${styles.FONTSIZE}px;`;
