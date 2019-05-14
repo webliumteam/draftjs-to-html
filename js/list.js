@@ -1,6 +1,6 @@
 import {
   getBlockTag,
-  getBlockStyle,
+  getListBlockStyle,
   getBlockInnerMarkup,
 } from './block';
 
@@ -51,7 +51,7 @@ export function getListMarkup(
     }
     if (!nestedBlock) {
       listHtml.push('<li');
-      const blockStyle = getBlockStyle(block.data);
+      const blockStyle = getListBlockStyle(block.data);
       if (blockStyle) {
         listHtml.push(` style="${blockStyle}"`);
       }
