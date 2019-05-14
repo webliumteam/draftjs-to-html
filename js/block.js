@@ -17,6 +17,22 @@ const blockTypesMapping: Object = {
   code: 'pre',
 };
 
+const inlineStylesMap: Object = {
+  BOLD: '<span style="font-weight: bold;">{$}</span>',
+  ITALIC: '<em>{$}</em>',
+  UNDERLINE: '<u>{$}</u>',
+  STRIKETHROUGH: '<del>{$}</del>',
+  CODE: '<code>{$}</code>',
+  SUPERSCRIPT: '<sup>{$}</sup>',
+  SUBSCRIPT: '<sub>{$}</sub>',
+  UNBOLD: '<span style="font-weight: normal;">{$}</span>',
+  UNITALIC: '<span style="font-style: normal;">{$}</span>',
+};
+
+const defaultStylesMap: Object = {
+  unstyled: 'display: block;',
+};
+
 const listSpecificStylesMap: Object = {
   'text-align-center': 'margin-left: auto; margin-right: auto;',
   'text-align-left': 'margin-right: auto; margin-left: 0;',
@@ -24,17 +40,6 @@ const listSpecificStylesMap: Object = {
 };
 
 const getAlignment = (key, value) => listSpecificStylesMap[`${key}-${value}`] || '';
-
-/**
-* Function will return HTML tag for a block.
-*/
-export function getBlockTag(type: string): string {
-  return type && blockTypesMapping[type];
-}
-
-/**
-* Function will return style string for a block.
-*/
 
 export function getListBlockStyle(data: Object): string {
   let styles = '';
@@ -46,6 +51,16 @@ export function getListBlockStyle(data: Object): string {
   return styles;
 }
 
+/**
+* Function will return HTML tag for a block.
+*/
+export function getBlockTag(type: string): string {
+  return type && blockTypesMapping[type];
+}
+
+/**
+* Function will return style string for a block.
+*/
 export function getBlockStyle(data: Object): string {
   let styles = '';
   forEach(data, (key, value) => {
@@ -165,6 +180,8 @@ function getStyleArrayForBlock(block: Object): Object {
     BOLD: new Array(text.length),
     ITALIC: new Array(text.length),
     UNDERLINE: new Array(text.length),
+    UNBOLD: new Array(text.length),
+    UNITALIC: new Array(text.length),
     STRIKETHROUGH: new Array(text.length),
     CODE: new Array(text.length),
     SUPERSCRIPT: new Array(text.length),
@@ -214,6 +231,12 @@ export function getStylesAtOffset(inlineStyles: Object, offset: number): Object 
   if (inlineStyles.FONTFAMILY[offset]) {
     styles.FONTFAMILY = inlineStyles.FONTFAMILY[offset];
   }
+  if (inlineStyles.UNITALIC[offset]) {
+    styles.UNITALIC = true;
+  }
+  if (inlineStyles.UNBOLD[offset]) {
+    styles.UNBOLD = true;
+  }
   if (inlineStyles.UNDERLINE[offset]) {
     styles.UNDERLINE = true;
   }
@@ -262,22 +285,7 @@ export function sameStyleAsPrevious(
 * Function returns html for text depending on inline style tags applicable to it.
 */
 export function addInlineStyleMarkup(style: string, content: string): string {
-  if (style === 'BOLD') {
-    return `<strong>${content}</strong>`;
-  } else if (style === 'ITALIC') {
-    return `<em>${content}</em>`;
-  } else if (style === 'UNDERLINE') {
-    return `<ins>${content}</ins>`;
-  } else if (style === 'STRIKETHROUGH') {
-    return `<del>${content}</del>`;
-  } else if (style === 'CODE') {
-    return `<code>${content}</code>`;
-  } else if (style === 'SUPERSCRIPT') {
-    return `<sup>${content}</sup>`;
-  } else if (style === 'SUBSCRIPT') {
-    return `<sub>${content}</sub>`;
-  }
-  return content;
+  return (inlineStylesMap[style] || '{$}').replace(/\{\$\}/, content);
 }
 
 /**
@@ -311,10 +319,10 @@ export function addStylePropertyMarkup(styles: Object, text: string): string {
   if (styles && (styles.COLOR || styles.BGCOLOR || styles.FONTSIZE || styles.FONTFAMILY)) {
     let styleString = 'style="';
     if (styles.COLOR) {
-      styleString += `color: ${styles.COLOR};`;
+      styleString += `color: ${styles.COLOR.replace(/ /g, '')};`;
     }
     if (styles.BGCOLOR) {
-      styleString += `background-color: ${styles.BGCOLOR};`;
+      styleString += `background-color: ${styles.BGCOLOR.replace(/ /g, '')};`;
     }
     if (styles.FONTSIZE) {
       styleString += `font-size: ${styles.FONTSIZE}px;`;
@@ -349,7 +357,7 @@ function getEntityMarkup(
   }
   if (entity.type === 'LINK') {
     const targetOption = entity.data.targetOption || '_self';
-    return `<a href="${entity.data.url}" target="${targetOption}">${text}</a>`;
+    return `<a href="${entity.data.url}" class="ui-link" target="${targetOption}">${text}</a>`;
   }
   if (entity.type === 'IMAGE') {
     return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="float:${entity.data.alignment || 'none'};height: ${entity.data.height};width: ${entity.data.width}"/>`;
@@ -449,7 +457,7 @@ like color, background-color, font-size are applicable.
 */
 function getInlineStyleSectionMarkup(block: Object, styleSection: Object): string {
   const styleTagSections = getInlineStyleSections(
-    block, ['BOLD', 'ITALIC', 'UNDERLINE', 'STRIKETHROUGH', 'CODE', 'SUPERSCRIPT', 'SUBSCRIPT'], styleSection.start, styleSection.end,
+    block, ['UNBOLD', 'UNITALIC', 'BOLD', 'ITALIC', 'UNDERLINE', 'STRIKETHROUGH', 'CODE', 'SUPERSCRIPT', 'SUBSCRIPT'], styleSection.start, styleSection.end,
   );
   let styleSectionText = '';
   styleTagSections.forEach((stylePropertySection) => {
@@ -480,7 +488,12 @@ function getSectionMarkup(
   inlineStyleSections.forEach((styleSection) => {
     entityInlineMarkup.push(getInlineStyleSectionMarkup(block, styleSection));
   });
-  let sectionText = entityInlineMarkup.join('');
+  let sectionText = entityInlineMarkup
+    .map((item) => {
+      const match = item.match(/color:\s?var\(--(.*?)\)/);
+      return match ? item.replace('style=', `class="text-${match[1]}" style=`) : item;
+    })
+    .join('');
   if (section.type === 'ENTITY') {
     if (section.entityKey !== undefined && section.entityKey !== null) {
       sectionText = getEntityMarkup(entityMap, section.entityKey, sectionText, customEntityTransform);
@@ -525,7 +538,8 @@ export function getBlockMarkup(
   entityMap: Object,
   hashtagConfig: Object,
   directional: boolean,
-  customEntityTransform: Function
+  customEntityTransform: Function,
+  blocksTotal: Number,
 ): string {
   const blockHtml = [];
   if (isAtomicEntityBlock(block)) {
@@ -536,22 +550,27 @@ export function getBlockMarkup(
         undefined,
         customEntityTransform,
       ));
+  } else if (block.type === 'unstyled' && !block.text && blocksTotal > 1) {
+    blockHtml.push('<br>');
   } else {
     const blockTag = getBlockTag(block.type);
     if (blockTag) {
-      blockHtml.push(`<${blockTag}`);
+      const defaultStyle = defaultStylesMap[block.type] || '';
       const blockStyle = getBlockStyle(block.data);
-      if (blockStyle) {
-        blockHtml.push(` style="${blockStyle}"`);
+      const tagIsrequired = blocksTotal > 1 || blockStyle || directional;
+      if (tagIsrequired) {
+        blockHtml.push(`<${blockTag}`);
+        if (blockStyle || defaultStyle) {
+          blockHtml.push(` style="${defaultStyle}${blockStyle}"`);
+        }
+        if (directional) {
+          blockHtml.push(' dir = "auto"');
+        }
+        blockHtml.push('>');
       }
-      if (directional) {
-        blockHtml.push(' dir = "auto"');
-      }
-      blockHtml.push('>');
       blockHtml.push(getBlockInnerMarkup(block, entityMap, hashtagConfig, customEntityTransform));
-      blockHtml.push(`</${blockTag}>`);
+      tagIsrequired && blockHtml.push(`</${blockTag}>`);
     }
   }
-  blockHtml.push('\n');
   return blockHtml.join('');
 }
