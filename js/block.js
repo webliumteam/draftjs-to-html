@@ -4,7 +4,7 @@ import { forEach, isEmptyString } from './common';
 * Mapping block-type to corresponding html tag.
 */
 const blockTypesMapping: Object = {
-  unstyled: 'p',
+  unstyled: 'span',
   'header-one': 'h1',
   'header-two': 'h2',
   'header-three': 'h3',
