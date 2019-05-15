@@ -33,6 +33,24 @@ const defaultStylesMap: Object = {
   unstyled: 'display: block;',
 };
 
+const listSpecificStylesMap: Object = {
+  'text-align-center': 'margin-left: auto; margin-right: auto;',
+  'text-align-left': 'margin-right: auto; margin-left: 0;',
+  'text-align-right': 'margin-right: 0; margin-left: auto;',
+};
+
+const getAlignment = (key, value) => listSpecificStylesMap[`${key}-${value}`] || '';
+
+export function getListBlockStyle(data: Object): string {
+  let styles = '';
+  forEach(data, (key, value) => {
+    if (value) {
+      styles += `${key}:${value};${getAlignment(key, value)}`;
+    }
+  });
+  return styles;
+}
+
 /**
 * Function will return HTML tag for a block.
 */
