@@ -53,6 +53,8 @@ export function getListBlockStyle(data: Object): string {
 
 export function getListBlockClass(data: Object): string {
   let classNames = '';
+  console.log('data!!!!!!!!')
+  console.log(data)
   forEach(data, (key, value) => {
     if (value) {
       if (key === 'unordered-list') {
