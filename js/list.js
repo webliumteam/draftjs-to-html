@@ -2,11 +2,12 @@ import {
   getBlockTag,
   getListBlockStyle,
   getBlockInnerMarkup,
+  getListBlockClass,
 } from './block';
 
 /**
-* Function to check if a block is of type list.
-*/
+ * Function to check if a block is of type list.
+ */
 export function isList(blockType: string): any {
   return (
     blockType === 'unordered-list-item' ||
@@ -15,8 +16,8 @@ export function isList(blockType: string): any {
 }
 
 /**
-* Function will return html markup for a list block.
-*/
+ * Function will return html markup for a list block.
+ */
 export function getListMarkup(
   listBlocks: Array<Object>,
   entityMap: Object,
@@ -52,8 +53,12 @@ export function getListMarkup(
     if (!nestedBlock) {
       listHtml.push('<li');
       const blockStyle = getListBlockStyle(block.data);
+      const blockClass = getListBlockClass(block.data);
       if (blockStyle) {
         listHtml.push(` style="${blockStyle}"`);
+      }
+      if (blockClass) {
+        listHtml.push(` class="${blockClass}"`);
       }
       if (directional) {
         listHtml.push(' dir = "auto"');
