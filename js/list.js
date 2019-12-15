@@ -28,7 +28,10 @@ export function getListMarkup(
   const listHtml = [];
   let nestedListBlock = [];
   let previousBlock;
+  console.log('test!!!!')
   listBlocks.forEach((block) => {
+    console.log('test2!!!!')
+    console.log(block)
     let nestedBlock = false;
     if (!previousBlock) {
       listHtml.push(`<${getBlockTag(block.type)}>\n`);
