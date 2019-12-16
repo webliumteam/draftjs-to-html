@@ -12,6 +12,7 @@ export default function draftToHtml(
   directional: boolean,
   customEntityTransform: Function
 ): string {
+  console.log('tes00t!!!!')
   const html = [];
   if (editorContent) {
     const { blocks, entityMap } = editorContent;

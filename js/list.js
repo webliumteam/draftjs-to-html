@@ -77,6 +77,7 @@ export function getListMarkup(
       previousBlock = block;
     }
   });
+  console.log('testqew!!!!')
   if (nestedListBlock && nestedListBlock.length > 0) {
     listHtml.push(getListMarkup(
       nestedListBlock,
