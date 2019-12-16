@@ -572,6 +572,10 @@ export function getBlockMarkup(
       const defaultStyle = defaultStylesMap[block.type] || '';
       const blockStyle = getBlockStyle(block.data);
       const tagIsrequired = blocksTotal > 1 || blockStyle || directional;
+      console.log('test!!!!')
+      console.log(blockHtml)
+      console.log(block.data)
+      console.log(block.data['unordered-list'])
       if (tagIsrequired) {
         blockHtml.push(`<${blockTag}`);
         if (blockStyle || defaultStyle) {

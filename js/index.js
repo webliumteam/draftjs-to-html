@@ -14,16 +14,12 @@ export default function draftToHtml(
 ): string {
   const html = [];
   if (editorContent) {
-    console.log('editorContent!!!!')
     const { blocks, entityMap } = editorContent;
     if (blocks && blocks.length > 0) {
-      console.log('blocks && blocks.length > 0!!!!')
       let listBlocks = [];
       blocks.forEach((block, index) => {
         console.log('blocks.forEach!!!!')
         console.log(block)
-        console.log(isList(block.type))
-        console.log(isList(listBlocks.length > 0))
         if (isList(block.type)) {
           listBlocks.push(block);
         } else {
@@ -32,7 +28,6 @@ export default function draftToHtml(
             html.push(listHtml);
             listBlocks = [];
           }
-          console.log(isList('const blockHtml = getBlockMarkup!!!!!!!'))
           const blockHtml = getBlockMarkup(
             block,
             entityMap,
