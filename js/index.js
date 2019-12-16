@@ -18,8 +18,6 @@ export default function draftToHtml(
     if (blocks && blocks.length > 0) {
       let listBlocks = [];
       blocks.forEach((block, index) => {
-        console.log('blocks.forEach!!!!')
-        console.log(block)
         if (isList(block.type)) {
           listBlocks.push(block);
         } else {
