@@ -51,17 +51,13 @@ export function getListBlockStyle(data: Object): string {
   return styles;
 }
 
-export function getListBlockClass(data: Object): string {
+export function getListBlockClass(block: Object): string {
   let classNames = '';
-  console.log('data!!!!!!!!')
-  console.log(data)
-  forEach(data, (key, value) => {
-    if (value) {
-      if (key === 'unordered-list') {
-        classNames += key;
-      }
-    }
-  });
+  console.log('getListBlockClass!!!!!!!!')
+  console.log(block)
+  if (block.data && block.data['unordered-list']) {
+    classNames += block.data['unordered-list'];
+  }
   return classNames;
 }
 
@@ -575,7 +571,9 @@ export function getBlockMarkup(
       console.log('test!!!!')
       console.log(blockHtml)
       console.log(block.data)
-      console.log(block.data['unordered-list'])
+      console.log(getListBlockClass(block))
+      console.log(tagIsrequired)
+      console.log(blockStyle)
       if (tagIsrequired) {
         blockHtml.push(`<${blockTag}`);
         if (blockStyle || defaultStyle) {
