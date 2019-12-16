@@ -51,12 +51,10 @@ export function getListBlockStyle(data: Object): string {
   return styles;
 }
 
-export function getListBlockClass(block: Object): string {
+export function getListBlockClass(data: Object): string {
   let classNames = '';
-  console.log('getListBlockClass!!!!!!!!')
-  console.log(block)
-  if (block.data && block.data['unordered-list']) {
-    classNames += block.data['unordered-list'];
+  if (data && data['unordered-list']) {
+    classNames += data['unordered-list'];
   }
   return classNames;
 }
@@ -567,17 +565,15 @@ export function getBlockMarkup(
     if (blockTag) {
       const defaultStyle = defaultStylesMap[block.type] || '';
       const blockStyle = getBlockStyle(block.data);
+      const blockClass = getListBlockClass(block.data);
       const tagIsrequired = blocksTotal > 1 || blockStyle || directional;
-      console.log('test!!!!')
-      console.log(blockHtml)
-      console.log(block.data)
-      console.log(getListBlockClass(block))
-      console.log(tagIsrequired)
-      console.log(blockStyle)
       if (tagIsrequired) {
         blockHtml.push(`<${blockTag}`);
         if (blockStyle || defaultStyle) {
           blockHtml.push(` style="${defaultStyle}${blockStyle}"`);
+        }
+        if (blockClass) {
+          blockHtml.push(` class="${blockClass}"`);
         }
         if (directional) {
           blockHtml.push(' dir = "auto"');
