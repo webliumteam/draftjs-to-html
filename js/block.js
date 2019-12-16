@@ -51,10 +51,12 @@ export function getListBlockStyle(data: Object): string {
   return styles;
 }
 
+const classRelatedOptions = ['unordered-list']
+
 export function getListBlockClass(data: Object): string {
   let classNames = '';
   if (data && data['unordered-list']) {
-    classNames += data['unordered-list'];
+    classNames += 'unordered-list';
   }
   return classNames;
 }
@@ -72,7 +74,7 @@ export function getBlockTag(type: string): string {
 export function getBlockStyle(data: Object): string {
   let styles = '';
   forEach(data, (key, value) => {
-    if (value) {
+    if (value && !classRelatedOptions.includes(key)) {
       styles += `${key}:${value};`;
     }
   });
